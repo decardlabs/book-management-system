@@ -235,3 +235,36 @@ nginx -t && sudo systemctl reload nginx
 ```bash
 npm run dev
 ```
+
+## Postman 导入与联调顺序
+
+### 导入文件
+
+- Collection：`postman/book-management-system.postman_collection.json`
+- Local Environment：`postman/book-management-system.local.postman_environment.json`
+- Production Environment：`postman/book-management-system.prod.postman_environment.json`
+
+### 联调步骤（推荐）
+
+1. 导入 Collection 与 Environment。
+2. 选择当前环境：
+  - 本地联调：`Book Management - Local`
+  - 线上联调：`Book Management - Production`
+3. 先执行 `Auth/Login`（会自动保存 token）。
+4. 再测试受保护接口（Users/Borrows/管理员 Books）。
+
+### 最小闭环验证
+
+1. `Auth/Login`
+2. `Books/Get Books`
+3. `Books/Create Book (Admin)`
+4. `Borrows/Create Borrow`
+5. `Borrows/Return Borrow`
+6. `Borrows/Borrow Stats (Admin)`
+
+### 常见问题
+
+- 401：通常是未先登录或 token 失效。
+- 403：当前账号权限不足（非 admin 访问管理员接口）。
+- 404：`bookId`/`borrowId`/`userId` 变量对应记录不存在。
+- 500：查看后端日志定位数据库或配置问题。
